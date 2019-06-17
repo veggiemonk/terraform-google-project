@@ -44,7 +44,6 @@ If not specified, the variables `project_prefix`, `org_id` and `billing_account`
 must be set.
 EOF
 
-
   type    = string
   default = ""
 

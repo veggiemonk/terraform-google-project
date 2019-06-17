@@ -41,7 +41,11 @@ data "google_project" "project" {
 # Obtain the project_id from either the newly created project resource or
 # existing data project resource
 locals {
-  project_id = trimspace("%{if google_project.project[0].project_id != ""}${google_project.project[0].project_id} %{else}${data.google_project.project.*.project_id} %{endif}")
+  project_id = trimspace(
+    google_project.project[0].project_id != ""
+    ? google_project.project[0].project_id
+    : data.google_project.project.*.project_id
+  )
 }
 
 #------------------------------------------------------------------------------
