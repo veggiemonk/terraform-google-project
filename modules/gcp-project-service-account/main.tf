@@ -39,16 +39,9 @@ data "google_project" "project" {
 }
 
 # Obtain the project_id from either the newly created project resource or
-# existing data project resource One will be populated and the other will be
-# null
+# existing data project resource
 locals {
-  project_id = element(
-    concat(
-      data.google_project.project.*.project_id,
-      google_project.project[0].project_id,
-    ),
-    0,
-  )
+  project_id = trimspace("%{if google_project.project[0].project_id != ""}${google_project.project[0].project_id} %{else}${data.google_project.project.*.project_id} %{endif}")
 }
 
 #------------------------------------------------------------------------------

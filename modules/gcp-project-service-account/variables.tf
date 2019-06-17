@@ -91,7 +91,9 @@ EOF
 
 variable "service_account_id" {
   description = <<EOF
-ID of the service account. Lowercase with dash.
+ID of the service account. It must match regexp "^[a-z](?:[-a-z0-9]{4,28}[a-z0-9])$"
+
+Meaning: between 4 to 28 characters, containing numbers,letters and dashes `-`.
 
 Example: "app-server"
 EOF
