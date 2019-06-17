@@ -16,14 +16,8 @@ variable "billing_account" {
 }
 
 variable "project_prefix" {
-  description = "The prefix for the project to be created. All GCP projects must be globally unique so a random string will be added to this prefix if used. "
-  default     = ""
-}
-
-variable "project_id" {
-  description = "The id of the already existing project in which to set the owners and editors."
-  type        = string
-  default     = ""
+  description = "All GCP projects must be globally unique so a random string will be added to this prefix if used. "
+  default     = "trainee"
 }
 
 #------------------------------------------------------------------------------
@@ -52,36 +46,22 @@ EOF
   ]
 }
 
+
 #------------------------------------------------------------------------------
 # OWNERS & EDITORS
 #------------------------------------------------------------------------------
 
-variable "owners" {
-  type = list(string)
-  description = <<EOF
-The list of the user account that will receive the `owner` role in the project.
 
-Be careful! 
-You can accidentally lock yourself out of your project using this resource. 
-See https://www.terraform.io/docs/providers/google/r/google_project_iam.html
-EOF
-  default = ["owner@gmail.com"]
+variable "email_owner" {
+  default = "trainer@gmail.com"
 }
 
-variable "editors" {
+variable "emails_editor" {
   type = list(string)
-  
-  description = <<EOF
-The list of the user account that will receive the `editor` role in the project.
-Be careful! 
-You can accidentally lock yourself out of your project using this resource. 
-See https://www.terraform.io/docs/providers/google/r/google_project_iam.html
 
-EOF
-  # TODO: Use "group" instead of "user"
   default = [
-    "editor1@gmail.com",
-    "editor2@gmail.com",
-    "editor3@gmail.com",
+    "trainee1@gmail.com",
+    "trainee2@gmail.com",
+    "trainee3@gmail.com",
   ]
 }
