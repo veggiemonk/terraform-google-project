@@ -34,7 +34,7 @@ locals {
   project_id = trimspace(
     google_project.project[0].project_id != ""
     ? google_project.project[0].project_id
-    : data.google_project.project.*.project_id
+    : data.google_project.project[0].project_id
   )
 }
 
