@@ -42,9 +42,12 @@ locals {
 # Activates all the listed API in the GCP project
 #------------------------------------------------------------------------------
 resource "google_project_services" "apis" {
-  project = local.project_id
-
   services = var.services
+
+  # Do not disable the service on destroy. On destroy, we are going to
+  # destroy the project, but we need the APIs available to destroy the
+  # underlying resources.
+  disable_on_destroy = false
 }
 
 #------------------------------------------------------------------------------
