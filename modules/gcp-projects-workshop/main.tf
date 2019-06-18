@@ -1,7 +1,12 @@
-provider "google" {
-  region = var.region
+terraform {
+  # The modules used in this example have been updated with 0.12 syntax, which means the example is no longer
+  # compatible with any versions below 0.12.
+  required_version = ">= 0.12"
 }
 
+#------------------------------------------------------------------------------
+# Creates one GCP project per trainee
+#------------------------------------------------------------------------------
 resource "random_id" "trainee" {
   count       = length(var.emails_editor)
   byte_length = "4"
@@ -15,6 +20,19 @@ resource "google_project" "trainee" {
   org_id          = var.org_id
 }
 
+#------------------------------------------------------------------------------
+# Activates the service APIs
+#------------------------------------------------------------------------------
+resource "google_project_services" "trainee" {
+  count   = length(var.emails_editor)
+  project = element(google_project.trainee.*.project_id, count.index)
+
+  services = var.services
+}
+
+#------------------------------------------------------------------------------
+# Set IAM permissions
+#------------------------------------------------------------------------------
 data "google_iam_policy" "trainee" {
   count = length(var.emails_editor)
 
@@ -41,9 +59,3 @@ resource "google_project_iam_policy" "trainee" {
   policy_data = element(data.google_iam_policy.trainee.*.policy_data, count.index)
 }
 
-resource "google_project_services" "trainee" {
-  count   = length(var.emails_editor)
-  project = element(google_project.trainee.*.project_id, count.index)
-
-  services = var.services
-}

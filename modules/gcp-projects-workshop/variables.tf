@@ -1,8 +1,7 @@
-variable "region" {
-  type    = string
-  default = "europe-west1"
-}
-
+# ---------------------------------------------------------------------------------------------------------------------
+# REQUIRED PARAMETERS
+# These parameters must be supplied when consuming this module.
+# ---------------------------------------------------------------------------------------------------------------------
 variable "org_id" {
   description = "The organization to hold the newly created project."
   type        = string
@@ -20,10 +19,26 @@ variable "project_prefix" {
   default     = "trainee"
 }
 
-#------------------------------------------------------------------------------
-# ACTIVATE APIS
-#------------------------------------------------------------------------------
+variable "email_owner" {
+  description = "The account (email) of the trainor"
+  default     = "trainer@gmail.com"
+}
 
+variable "emails_editor" {
+  description = "List of the accounts of the trainees"
+  type        = list(string)
+
+  default = [
+    "trainee1@gmail.com",
+    "trainee2@gmail.com",
+    "trainee3@gmail.com",
+  ]
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# OPTIONAL PARAMETERS
+# These parameters have reasonable defaults.
+# ---------------------------------------------------------------------------------------------------------------------
 variable "services" {
   type        = list(string)
   description = <<EOF
@@ -43,25 +58,5 @@ EOF
     "resourceviews.googleapis.com", # Compute Engine Instance Groups API
     "storage-api.googleapis.com", # Google Cloud Storage JSON API
     "storage-component.googleapis.com", # Cloud Storage
-  ]
-}
-
-
-#------------------------------------------------------------------------------
-# OWNERS & EDITORS
-#------------------------------------------------------------------------------
-
-
-variable "email_owner" {
-  default = "trainer@gmail.com"
-}
-
-variable "emails_editor" {
-  type = list(string)
-
-  default = [
-    "trainee1@gmail.com",
-    "trainee2@gmail.com",
-    "trainee3@gmail.com",
   ]
 }

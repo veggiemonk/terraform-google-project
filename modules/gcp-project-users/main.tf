@@ -1,19 +1,11 @@
-#------------------------------------------------------------------------------
-# GOOGLE PROVIDER
-#------------------------------------------------------------------------------
-
-provider "google" {
-  region  = var.region
-  project = var.project_id
-}
-
-provider "google-beta" {
-  region  = var.region
-  project = var.project_id
+terraform {
+  # The modules used in this example have been updated with 0.12 syntax, which means the example is no longer
+  # compatible with any versions below 0.12.
+  required_version = ">= 0.12"
 }
 
 #------------------------------------------------------------------------------
-# CREATE OR REUSE GCP PROJECT
+# Create the project or use an existing project, if defined
 #------------------------------------------------------------------------------
 
 # Generate a random id for the project - GCP projects must have globally
@@ -23,7 +15,6 @@ resource "random_id" "project_random" {
   byte_length = "8"
 }
 
-# Create the project if one isn't specified
 resource "google_project" "project" {
   count           = var.project_id != "" ? 0 : 1
   name            = random_id.project_random.hex
@@ -32,7 +23,6 @@ resource "google_project" "project" {
   billing_account = var.billing_account
 }
 
-# Or use an existing project, if defined
 data "google_project" "project" {
   count      = var.project_id != "" ? 1 : 0
   project_id = var.project_id
@@ -47,11 +37,10 @@ locals {
     : data.google_project.project.*.project_id
   )
 }
-#------------------------------------------------------------------------------
-# ACTIVATE APIS
-#------------------------------------------------------------------------------
 
+#------------------------------------------------------------------------------
 # Activates all the listed API in the GCP project
+#------------------------------------------------------------------------------
 resource "google_project_services" "apis" {
   project = local.project_id
 
@@ -89,9 +78,7 @@ data "google_iam_policy" "owners" {
     ]
   }
 }
-
 # Sets the IAM policy for the project and replaces any existing policy already attached.
-
 resource "google_project_iam_policy" "owners" {
   count       = length(var.owners)
   project     = local.project_id
@@ -110,7 +97,7 @@ data "google_iam_policy" "editors" {
     ]
   }
 }
-
+# Sets the IAM policy for the project and replaces any existing policy already attached.
 resource "google_project_iam_policy" "editors" {
   count       = length(var.editors)
   project     = local.project_id
