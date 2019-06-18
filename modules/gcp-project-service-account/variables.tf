@@ -84,8 +84,9 @@ EOF
 # These parameters have reasonable defaults.
 # ---------------------------------------------------------------------------------------------------------------------
 variable "services" {
-  type = list(string)
+  description = "See the full list of API that can be activate with `gcloud services list --available`"
 
+  type = list(string)
   default = [
     "cloudresourcemanager.googleapis.com", # Cloud Resource Manager API
     "cloudshell.googleapis.com", # Cloud Shell API
@@ -93,6 +94,7 @@ variable "services" {
     "container.googleapis.com", # Kubernetes Engine API
     "containerregistry.googleapis.com", # Container Registry API
     "iam.googleapis.com", # Identity and Access Management (IAM) API
+    "cloudkms.googleapis.com", # Cloud Key Management Service (KMS) API
     "logging.googleapis.com", # Stackdriver Logging API
     "oslogin.googleapis.com", # Cloud OS Login API
     "replicapool.googleapis.com", # Compute Engine Instance Group Manager API
