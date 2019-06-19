@@ -14,8 +14,8 @@ resource "random_id" "trainee" {
 
 resource "google_project" "trainee" {
   count           = length(var.emails_editor)
-  name            = "${var.project_prefix}-${element(random_id.trainee.*.hex, count.index)}"
-  project_id      = "${var.project_prefix}-${element(random_id.trainee.*.hex, count.index)}"
+  name            = "${var.project_prefix}-${random_id.trainee[count.index].hex}"
+  project_id      = "${var.project_prefix}-${random_id.trainee[count.index].hex}"
   billing_account = var.billing_account
   org_id          = var.org_id
 }
@@ -25,9 +25,14 @@ resource "google_project" "trainee" {
 #------------------------------------------------------------------------------
 resource "google_project_services" "trainee" {
   count   = length(var.emails_editor)
-  project = element(google_project.trainee.*.project_id, count.index)
+  project = google_project.trainee[count.index].project_id
 
   services = var.services
+
+  # Do not disable the service on destroy. On destroy, we are going to
+  # destroy the project, but we need the APIs available to destroy the
+  # underlying resources.
+  disable_on_destroy = false
 }
 
 #------------------------------------------------------------------------------
@@ -48,14 +53,14 @@ data "google_iam_policy" "trainee" {
     role = "roles/editor"
 
     members = [
-      "user:${element(var.emails_editor, count.index)}",
+      "user:${var.emails_editor[count.index]}",
     ]
   }
 }
 
 resource "google_project_iam_policy" "trainee" {
   count       = length(var.emails_editor)
-  project     = element(google_project.trainee.*.project_id, count.index)
-  policy_data = element(data.google_iam_policy.trainee.*.policy_data, count.index)
+  project     = google_project.trainee[count.index].project_id
+  policy_data = data.google_iam_policy.trainee[count.index].policy_data
 }
 

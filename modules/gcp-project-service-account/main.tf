@@ -42,6 +42,8 @@ locals {
 # Activates all the listed API in the GCP project
 #------------------------------------------------------------------------------
 resource "google_project_services" "apis" {
+  project = local.project_id
+
   services = var.services
 
   # Do not disable the service on destroy. On destroy, we are going to
@@ -67,7 +69,7 @@ resource "google_service_account_key" "app" {
 resource "google_project_iam_member" "service-account" {
   count   = length(var.service_account_iam_roles)
   project = local.project_id
-  role    = element(var.service_account_iam_roles, count.index)
+  role    = var.service_account_iam_roles[count.index]
   member  = "serviceAccount:${google_service_account.app.email}"
 }
 
@@ -75,7 +77,7 @@ resource "google_project_iam_member" "service-account" {
 resource "google_project_iam_member" "service-account-custom" {
   count   = length(var.service_account_custom_iam_roles)
   project = local.project_id
-  role    = element(var.service_account_custom_iam_roles, count.index)
+  role    = var.service_account_custom_iam_roles[count.index]
   member  = "serviceAccount:${google_service_account.app.email}"
 }
 

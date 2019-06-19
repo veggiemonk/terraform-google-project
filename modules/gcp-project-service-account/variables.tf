@@ -87,35 +87,38 @@ variable "services" {
   description = <<EOF
 See the full list of API that can be activate with `gcloud services list --available`
 Example:
-[
-  "cloudresourcemanager.googleapis.com", # Cloud Resource Manager API
-  "cloudshell.googleapis.com", # Cloud Shell API
-  "compute.googleapis.com", # Compute Engine API
-  "container.googleapis.com", # Kubernetes Engine API
-  "containerregistry.googleapis.com", # Container Registry API
-  "iam.googleapis.com", # Identity and Access Management (IAM) API
-  "cloudkms.googleapis.com", # Cloud Key Management Service (KMS) API
-  "logging.googleapis.com", # Stackdriver Logging API
-  "oslogin.googleapis.com", # Cloud OS Login API
-  "replicapool.googleapis.com", # Compute Engine Instance Group Manager API
-  "replicapoolupdater.googleapis.com", # Compute Engine Instance Group Updater API
-  "resourceviews.googleapis.com", # Compute Engine Instance Groups API
-  "storage-api.googleapis.com", # Google Cloud Storage JSON API
-  "storage-component.googleapis.com", # Cloud Storage
-]
 EOF
   type = list(string)
-  default = []
+  default = [
+    "bigquery-json.googleapis.com",
+    "cloudkms.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
+    "cloudshell.googleapis.com",
+    "compute.googleapis.com",
+    "container.googleapis.com",
+    "containerregistry.googleapis.com",
+    "deploymentmanager.googleapis.com",
+    "iam.googleapis.com",
+    "iamcredentials.googleapis.com",
+    "logging.googleapis.com",
+    "oslogin.googleapis.com",
+    "pubsub.googleapis.com",
+    "replicapool.googleapis.com",
+    "replicapoolupdater.googleapis.com",
+    "resourceviews.googleapis.com",
+    "storage-api.googleapis.com",
+    "storage-component.googleapis.com",
+  ]
 }
 
 #------------------------------------------------------------------------------
 # IAM ROLES
 #------------------------------------------------------------------------------
 variable "service_account_custom_iam_roles" {
-type = list(string)
-default = []
+  type    = list(string)
+  default = []
 
-description = <<EOF
+  description = <<EOF
 List of arbitrary additional IAM roles to attach to the service account.
 They will be attached to the same service account but allows for further customization.
 EOF

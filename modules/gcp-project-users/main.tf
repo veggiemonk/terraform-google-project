@@ -45,6 +45,11 @@ resource "google_project_services" "apis" {
   project = local.project_id
 
   services = var.services
+
+  # Do not disable the service on destroy. On destroy, we are going to
+  # destroy the project, but we need the APIs available to destroy the
+  # underlying resources.
+  disable_on_destroy = false
 }
 
 #------------------------------------------------------------------------------
@@ -74,7 +79,7 @@ data "google_iam_policy" "owners" {
     role = "roles/owner"
 
     members = [
-      "user:${element(var.owners, count.index)}",
+      "user:${var.owners[count.index]}",
     ]
   }
 }
@@ -82,7 +87,7 @@ data "google_iam_policy" "owners" {
 resource "google_project_iam_policy" "owners" {
   count       = length(var.owners)
   project     = local.project_id
-  policy_data = element(data.google_iam_policy.owners.*.policy_data, count.index)
+  policy_data = data.google_iam_policy.owners[count.index].policy_data
 }
 
 # Adds the editors for the project
@@ -93,7 +98,7 @@ data "google_iam_policy" "editors" {
     role = "roles/editor"
 
     members = [
-      "user:${element(var.editors, count.index)}",
+      "user:${var.editors[count.index]}",
     ]
   }
 }
@@ -101,6 +106,6 @@ data "google_iam_policy" "editors" {
 resource "google_project_iam_policy" "editors" {
   count       = length(var.editors)
   project     = local.project_id
-  policy_data = element(data.google_iam_policy.editors.*.policy_data, count.index)
+  policy_data = data.google_iam_policy.editors[count.index].policy_data
 }
 
